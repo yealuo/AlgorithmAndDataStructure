@@ -20,8 +20,7 @@ int find_two_num(int arr[],int length,int* first_num,int* second_num){
         if(arr[i]&right_one!=0)
             *first_num^=arr[i];
     }
-    *second_num=*first_num^ero;
-    
+    *second_num=*first_num^ero;  
 }
 
 
