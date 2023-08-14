@@ -14,8 +14,6 @@ void InsertionSort(int* arr,int length){
     }
 }
 
-
-
 int main(){
     int array[]={9,3,8,10,6,2,1,5,4,7,312,253,332};
     int length=sizeof(array)/sizeof(array[0]);
