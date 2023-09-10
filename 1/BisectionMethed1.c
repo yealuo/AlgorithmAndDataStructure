@@ -13,7 +13,7 @@ void bisection(int* arr, size_t length, int target) {
         else if (arr[mid] < target)
             left = mid + 1;
     }
-    printf("未找到，该书不在此数组。");
+    printf("未找到，该数不在此数组。");
 }
 
 int main() {
