@@ -1,20 +1,19 @@
 #include <stdio.h>
 
 void bisection2(int* arr, size_t length, int target) {
-    int left = 0, right = length - 1,t=-1;
+    int left = 0, right = length - 1, t = -1;
     while (left <= right) {
         int mid = (left + right) >> 1;
         if (arr[mid] >= target) {
-            t=mid;
-            right=mid-1;
-        }
-        else
-            left=mid+1;
+            t = mid;
+            right = mid - 1;
+        } else
+            left = mid + 1;
     }
-    if(t<0)
+    if (t < 0)
         printf("未找到，该数不在此数组。");
     else
-        printf("已找到，≥%d最左侧位置索引值为：%d",target,t);
+        printf("已找到，≥%d最左侧位置索引值为：%d", target, t);
 }
 
 int main() {
