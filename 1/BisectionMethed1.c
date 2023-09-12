@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void bisection(int* arr, size_t length, int target) {
+void bisection1(int* arr, size_t length, int target) {
     int left = 0, right = length - 1;
     while (left <= right) {
         int mid = (left + right) >> 1;
@@ -19,6 +19,6 @@ void bisection(int* arr, size_t length, int target) {
 int main() {
     int array[] = {1, 3, 7, 9, 10, 16, 23, 33, 36, 38, 40, 42, 49, 56, 57, 59};
     int length = sizeof(array) / sizeof(array[0]);
-    bisection(array, length, 58);
+    bisection1(array, length, 58);
     return 0;
 }
