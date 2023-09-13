@@ -1,11 +1,11 @@
 #include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
 
-int length(int* arr) {
-    return sizeof(arr) / sizeof(arr[0]);
-}
-
-int main() {
-    int arr[] = {1, 2, 3, 4, 5, 6};
-    printf("%d", length(arr));
-    printf("\n%d", sizeof(arr) / sizeof(arr[0]));
+int main(){
+    srand(time(NULL));
+    printf("%d\n",rand());
+    printf("%d\n",rand());
+    printf("%d\n",rand());
+    return 0;
 }

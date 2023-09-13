@@ -8,7 +8,7 @@ void bisection3(int* arr, size_t length) {
         return;
     } else if (arr[length - 1] < arr[length - 2]) {
         printf("已找到，局部最小值为：%d，索引值为：%d", arr[length - 1],
-               length - 1);
+               length - 1);                             
         return;
     } else {
         while (1) {
