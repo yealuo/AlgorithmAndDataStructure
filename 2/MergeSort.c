@@ -30,6 +30,7 @@ void merge(int arr[],int L,int R,int M){
     for(int j=0;j<(R-L+1);j++){
         arr[L+j]=help[j];
     }
+    free(help);
     return;
 }
 
