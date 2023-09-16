@@ -38,9 +38,16 @@ int process(int arr[], int L, int R) {
     return process(arr, L, mid)+process(arr, mid + 1, R)+merge(arr, L, R, mid);
 }
 
+int reversePairs(int* nums, int numsSize){
+    int L=0,R=numsSize-1;
+    printf("%d",process(nums,L,R));
+    return 0;
+}
+
+
 int main(){
-    int arr[] = {3,2,4,5,0};
+    int arr[] = {7,5,6,4};
     size_t length = sizeof(arr) / sizeof(arr[0]);
-    printf("%d",process(arr, 0, length - 1));
+    reversePairs(arr,length);
     return 0;
 }
