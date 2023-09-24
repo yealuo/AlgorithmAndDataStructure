@@ -35,20 +35,21 @@ void radixSort(int* arr, int L, int R, int maxBits) {
         // 处理内存分配失败的情况
         exit(1);
     }
-    // 数组最大值有几位就进出桶多少次
     for (int i = 1; i <= maxBits; i++) {
+        // 数组最大值有几位就进出桶多少次
         // 基数计数
         int count[radix] = {0};
         for (int j = L; j <= R; j++) {
             int digit = getDigit(arr[j], i);
             count[digit]++;
         }
-        // 将count更新为前缀和数组
+
         for (int j = 1; j < radix; j++) {
+            // 将count更新为前缀和数组
             count[j] += count[j - 1];
         }
-        // 从右往左对当前位进行桶排序
         for (int j = R; j >= L; j--) {
+            // 从右往左对当前位进行桶排序
             int digit = getDigit(arr[j], i);
             bucket[count[digit] - 1] = arr[j];
             count[digit]--;
