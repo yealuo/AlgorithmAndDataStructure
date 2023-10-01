@@ -56,7 +56,7 @@ void printList1(linkedList1 head) {
     return;
 }
 
-//释放单链表内存
+// 释放单链表内存
 void freeList1(linkedList1 head) {
     node1* current = head;
     while (current != NULL) {
@@ -264,8 +264,8 @@ node1* findMidpoint4(linkedList1 head) {
         ptrFast = ptrFast->next->next;
         count++;
     }
-    printf("中点后一个节点数据为：%c\n中点节点序号为：%d\n", ptrSlow->next->data,
-           count + 1);
+    printf("中点后一个节点数据为：%c\n中点节点序号为：%d\n",
+           ptrSlow->next->data, count + 1);
     return ptrSlow->next;
 }
 
