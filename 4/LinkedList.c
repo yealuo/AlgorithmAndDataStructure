@@ -56,7 +56,7 @@ void printList1(linkedList1 head) {
     return;
 }
 
-//释放链表内存
+//释放单链表内存
 void freeList1(linkedList1 head) {
     node1* current = head;
     while (current != NULL) {
