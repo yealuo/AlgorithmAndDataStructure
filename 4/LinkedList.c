@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -53,6 +54,16 @@ void printList1(linkedList1 head) {
         node = node->next;
     }
     return;
+}
+
+//释放链表内存
+void freeList1(linkedList1 head) {
+    node1* current = head;
+    while (current != NULL) {
+        node1* temp = current;
+        current = current->next;
+        free(temp);
+    }
 }
 
 // 双向链表
@@ -118,6 +129,9 @@ void printList2(linkedList2 head) {
 
 // 反转单向链表
 node1* reverseLinkedList1(node1* head) {
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
     node1 *prev, *current, *next;
     prev = NULL;
     current = head->next;
@@ -153,29 +167,150 @@ void printPublicPart(linkedList1 head1, linkedList1 head2) {
     node1 *p1, *p2;
     p1 = head1->next;
     p2 = head2->next;
-    while (p1!=NULL&&p2!=NULL) {
-        if(p1->data==p2->data){
-            printf("%c ",p1->data);
-            p1=p1->next;
-            p2=p2->next;
-        }
-        else if(p1->data>p2->data){
-            p2=p2->next;
-        }
-        else{
-            p1=p1->next;
+    while (p1 != NULL && p2 != NULL) {
+        if (p1->data == p2->data) {
+            printf("%c ", p1->data);
+            p1 = p1->next;
+            p2 = p2->next;
+        } else if (p1->data > p2->data) {
+            p2 = p2->next;
+        } else {
+            p1 = p1->next;
         }
     }
     return;
 }
 
+// 快慢指针找到链表中点
+
+// 奇数个节点时慢指针指向中点
+// 偶数个节点时慢指针指向前一个中点
+node1* findMidpoint1(linkedList1 head) {
+    if (head == NULL || head->next == NULL) {
+        // 处理空链表或只有一个节点的情况
+        return NULL;
+    }
+    int count = 1;
+    node1 *ptrSlow, *ptrFast;
+    ptrSlow = ptrFast = head->next;
+    while (ptrFast != NULL && ptrFast->next != NULL) {
+        ptrFast = ptrFast->next->next;
+        if (ptrFast == NULL) {
+            break;
+        }
+        ptrSlow = ptrSlow->next;
+        count++;
+    }
+    printf("中点数据为：%c\n中点节点序号为：%d\n", ptrSlow->data, count);
+    return ptrSlow;
+}
+
+// 奇数个节点时慢指针指向中点
+// 偶数个节点时慢指针指向后一个中点
+node1* findMidpoint2(linkedList1 head) {
+    if (head == NULL || head->next == NULL) {
+        // 处理空链表或只有一个节点的情况
+        return NULL;
+    }
+    int count = 1;
+    node1 *ptrSlow, *ptrFast;
+    ptrSlow = ptrFast = head->next;
+    while (ptrFast != NULL && ptrFast->next != NULL) {
+        ptrSlow = ptrSlow->next;
+        ptrFast = ptrFast->next->next;
+        count++;
+    }
+    printf("中点数据为：%c\n中点节点序号为：%d\n", ptrSlow->data, count);
+    return ptrSlow;
+}
+
+// 奇数个节点时慢指针指向中点前一个节点
+// 偶数个节点时慢指针指向前一个中点前一个节点
+node1* findMidpoint3(linkedList1 head) {
+    if (head == NULL || head->next->next->next == NULL) {
+        // 处理空链表或只有一个节点的情况
+        return NULL;
+    }
+    int count = 1;
+    node1 *ptrSlow, *ptrFast, *ptrPrv;
+    ptrSlow = ptrFast = head->next;
+    ptrPrv = head;
+    while (ptrFast != NULL && ptrFast->next != NULL) {
+        ptrFast = ptrFast->next->next;
+        if (ptrFast == NULL) {
+            break;
+        }
+        ptrSlow = ptrSlow->next;
+        ptrPrv = ptrPrv->next;
+        count++;
+    }
+    printf("中点前一个节点数据为：%c\n中点节点序号为：%d\n", ptrPrv->data,
+           count - 1);
+    return ptrPrv;
+}
+
+// 奇数个节点时慢指针指向中点后一个节点
+// 偶数个节点时慢指针指向后一个中点后一个节点
+node1* findMidpoint4(linkedList1 head) {
+    if (head == NULL || head->next->next->next == NULL) {
+        // 处理空链表或只有一个节点的情况
+        return NULL;
+    }
+    int count = 1;
+    node1 *ptrSlow, *ptrFast;
+    ptrSlow = ptrFast = head->next;
+    while (ptrFast != NULL && ptrFast->next != NULL) {
+        ptrSlow = ptrSlow->next;
+        ptrFast = ptrFast->next->next;
+        count++;
+    }
+    printf("中点后一个节点数据为：%c\n中点节点序号为：%d\n", ptrSlow->next->data,
+           count + 1);
+    return ptrSlow->next;
+}
+
+// 判断该链表是否为回文结构（空间复杂度O(1)）
+bool isPalindrome(linkedList1 head) {
+    if (head->next->next == NULL) {
+        return true;
+    }
+    node1 *midPtr1, *midPtr2;
+    linkedList1 head1;
+    initList1(&head1);
+    midPtr1 = findMidpoint1(head);
+    midPtr2 = findMidpoint2(head);
+    if (midPtr1 == midPtr2) {
+        head1->next = midPtr1->next;
+        midPtr1->next = NULL;
+        node1* tail = head1->next;
+        reverseLinkedList1(head1);
+        tail->next = midPtr1;
+    } else {
+        midPtr1->next = NULL;
+        head1->next = midPtr2;
+        reverseLinkedList1(head1);
+    }
+    node1 *leftPtr, *rightPtr;
+    leftPtr = head->next;
+    rightPtr = head1->next;
+    while (leftPtr != NULL && rightPtr != NULL) {
+        if (leftPtr->data != rightPtr->data) {
+            free(head1);
+            return false;
+        }
+        leftPtr = leftPtr->next;
+        rightPtr = rightPtr->next;
+    }
+    free(head1);
+    return true;
+}
+
 int main() {
     linkedList1 list1;
-    linkedList1 list2;
     initList1(&list1);
-    initList1(&list2);
     creatFromTail1(list1);
-    creatFromTail1(list2);
-    printPublicPart(list1,list2);
+    printf("链表是否为回文结构判断结果：%s",
+           isPalindrome(list1) ? "true" : "false");
+    freeList1(list1);
     return 0;
 }
