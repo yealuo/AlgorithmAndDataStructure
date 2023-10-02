@@ -4,7 +4,7 @@
 
 // 单向链表
 typedef struct node1 {
-    char data;
+    int data;
     struct node1* next;
 } node1, *linkedList1;
 
@@ -17,14 +17,14 @@ void initList1(linkedList1* head) {
 // 头插法建单向链表
 void creatFromHead1(linkedList1 head) {
     node1* s;
-    char i;
-    scanf("%c", &i);
-    while (i != '$') {
+    int i;
+    scanf("%d", &i);
+    while (i != -1) {
         s = (node1*)malloc(sizeof(node1));
         s->data = i;
         s->next = head->next;
         head->next = s;
-        scanf("%c", &i);
+        scanf("%d", &i);
     }
     return;
 }
@@ -33,15 +33,15 @@ void creatFromHead1(linkedList1 head) {
 void creatFromTail1(linkedList1 head) {
     node1 *s, *t;
     t = head;
-    char i;
-    scanf("%c", &i);
-    while (i != '$') {
+    int i;
+    scanf("%d", &i);
+    while (i != -1) {
         s = (node1*)malloc(sizeof(node1));
         s->data = i;
         t->next = s;
         s->next = NULL;
         t = s;
-        scanf("%c", &i);
+        scanf("%d", &i);
     }
     return;
 }
@@ -50,7 +50,7 @@ void creatFromTail1(linkedList1 head) {
 void printList1(linkedList1 head) {
     node1* node = head->next;
     while (node != NULL) {
-        printf("%c", node->data);
+        printf("%d ", node->data);
         node = node->next;
     }
     return;
@@ -64,67 +64,6 @@ void freeList1(linkedList1 head) {
         current = current->next;
         free(temp);
     }
-}
-
-// 双向链表
-typedef struct node2 {
-    char data;
-    struct node2* prev;
-    struct node2* next;
-} node2, *linkedList2;
-
-void initList2(linkedList2* head) {
-    *head = (linkedList2)malloc(sizeof(node2));
-    (*head)->prev = NULL;
-    (*head)->next = NULL;
-    return;
-}
-
-// 头插法建双向链表
-void creatFromHead2(linkedList2 head) {
-    node2* s;
-    char i;
-    scanf("%c", &i);
-    while (i != '$') {
-        s = (node2*)malloc(sizeof(node2));
-        s->data = i;
-        s->next = head->next;
-        if (s->next != NULL) {
-            s->next->prev = s;
-        }
-        head->next = s;
-        s->prev = head;
-        scanf("%c", &i);
-    }
-    return;
-}
-
-// 尾插法建双向链表
-void creatFromTail2(linkedList2 head) {
-    node2 *s, *t;
-    t = head;
-    char i;
-    scanf("%c", &i);
-    while (i != '$') {
-        s = (node2*)malloc(sizeof(node2));
-        s->data = i;
-        t->next = s;
-        s->prev = t;
-        s->next = NULL;
-        t = s;
-        scanf("%c", &i);
-    }
-    return;
-}
-
-// 遍历输出双向链表
-void printList2(linkedList2 head) {
-    node2* node = head->next;
-    while (node != NULL) {
-        printf("%c", node->data);
-        node = node->next;
-    }
-    return;
 }
 
 // 反转单向链表
@@ -144,6 +83,77 @@ node1* reverseLinkedList1(node1* head) {
     }
     head->next = prev;
     return head;
+}
+
+// 双向链表
+typedef struct node2 {
+    int data;
+    struct node2* prev;
+    struct node2* next;
+} node2, *linkedList2;
+
+void initList2(linkedList2* head) {
+    *head = (linkedList2)malloc(sizeof(node2));
+    (*head)->prev = NULL;
+    (*head)->next = NULL;
+    return;
+}
+
+// 头插法建双向链表
+void creatFromHead2(linkedList2 head) {
+    node2* s;
+    int i;
+    scanf("%d", &i);
+    while (i != -1) {
+        s = (node2*)malloc(sizeof(node2));
+        s->data = i;
+        s->next = head->next;
+        if (s->next != NULL) {
+            s->next->prev = s;
+        }
+        head->next = s;
+        s->prev = head;
+        scanf("%d", &i);
+    }
+    return;
+}
+
+// 尾插法建双向链表
+void creatFromTail2(linkedList2 head) {
+    node2 *s, *t;
+    t = head;
+    int i;
+    scanf("%d", &i);
+    while (i != -1) {
+        s = (node2*)malloc(sizeof(node2));
+        s->data = i;
+        t->next = s;
+        s->prev = t;
+        s->next = NULL;
+        t = s;
+        scanf("%d", &i);
+    }
+    return;
+}
+
+// 遍历输出双向链表
+void printList2(linkedList2 head) {
+    node2* node = head->next;
+    while (node != NULL) {
+        printf("%d ", node->data);
+        node = node->next;
+    }
+    return;
+}
+
+// 释放双链表内存
+void freeList1(linkedList2 head) {
+    node2* current = head;
+    while (current != NULL) {
+        node2* temp = current;
+        current = current->next;
+        free(temp);
+    }
 }
 
 // 反转双向链表
@@ -169,7 +179,7 @@ void printPublicPart(linkedList1 head1, linkedList1 head2) {
     p2 = head2->next;
     while (p1 != NULL && p2 != NULL) {
         if (p1->data == p2->data) {
-            printf("%c ", p1->data);
+            printf("%d ", p1->data);
             p1 = p1->next;
             p2 = p2->next;
         } else if (p1->data > p2->data) {
@@ -201,7 +211,7 @@ node1* findMidpoint1(linkedList1 head) {
         ptrSlow = ptrSlow->next;
         count++;
     }
-    printf("中点数据为：%c\n中点节点序号为：%d\n", ptrSlow->data, count);
+    printf("中点数据为：%d\n中点节点序号为：%d\n", ptrSlow->data, count);
     return ptrSlow;
 }
 
@@ -220,7 +230,7 @@ node1* findMidpoint2(linkedList1 head) {
         ptrFast = ptrFast->next->next;
         count++;
     }
-    printf("中点数据为：%c\n中点节点序号为：%d\n", ptrSlow->data, count);
+    printf("中点数据为：%d\n中点节点序号为：%d\n", ptrSlow->data, count);
     return ptrSlow;
 }
 
@@ -244,7 +254,7 @@ node1* findMidpoint3(linkedList1 head) {
         ptrPrv = ptrPrv->next;
         count++;
     }
-    printf("中点前一个节点数据为：%c\n中点节点序号为：%d\n", ptrPrv->data,
+    printf("中点前一个节点数据为：%d\n中点节点序号为：%d\n", ptrPrv->data,
            count - 1);
     return ptrPrv;
 }
@@ -264,7 +274,7 @@ node1* findMidpoint4(linkedList1 head) {
         ptrFast = ptrFast->next->next;
         count++;
     }
-    printf("中点后一个节点数据为：%c\n中点节点序号为：%d\n",
+    printf("中点后一个节点数据为：%d\n中点节点序号为：%d\n",
            ptrSlow->next->data, count + 1);
     return ptrSlow->next;
 }
@@ -305,12 +315,115 @@ bool isPalindrome(linkedList1 head) {
     return true;
 }
 
+// 划分链表为荷兰国旗式
+linkedList1 listPartition(linkedList1 head, int num) {
+    if (head == NULL || head->next == NULL) {
+        return head;
+    }
+    node1* sH = NULL;
+    node1* sT = NULL;
+    node1* eH = NULL;
+    node1* eT = NULL;
+    node1* bH = NULL;
+    node1* bT = NULL;
+    node1* current = head->next;
+    node1* next = NULL;
+    while (current != NULL) {
+        next = current->next;
+        current->next = NULL;
+        if (current->data < num) {
+            if (sH == NULL) {
+                sH = current;
+                sT = current;
+            } else {
+                sT->next = current;
+                sT = current;
+            }
+        } else if (current->data == num) {
+            if (eH == NULL) {
+                eH = current;
+                eT = current;
+            } else {
+                eT->next = current;
+                eT = current;
+            }
+        } else {
+            if (bH == NULL) {
+                bH = current;
+                bT = current;
+            } else {
+                bT->next = current;
+                bT = current;
+            }
+        }
+        current = next;
+    }
+    if (sH != NULL) {
+        head->next = sH;
+        if (eH != NULL) {
+            sT->next = eH;
+            eT->next = bH;
+        } else {
+            sT->next = bH;
+        }
+    } else if (eH != NULL) {
+        head->next = eH;
+        eT->next = bH;
+    } else {
+        head->next = bH;
+    }
+    return head;
+}
+
+// 复制复杂链表（链表头含数据）
+typedef struct Node {
+    int value;
+    struct Node* next;
+    struct Node* rand;
+} Node;
+
+Node* copyListWithRand(Node* head) {
+    if (head == NULL) {
+        return NULL;
+    }
+    Node* current = head;
+    Node* next = NULL;
+    while (current != NULL) {
+        // 复制每一个节点到原节点后
+        next = current->next;
+        Node* node = (Node*)malloc(sizeof(Node));
+        node->value = current->value;
+        current->next = node;
+        node->next = next;
+        current = next;
+    }
+    current = head;
+    Node* copy = NULL;
+    while (current != NULL) {
+        // 复制节点的随机节点为原节点随机节点的后一个节点（随机节点为NULL时特殊处理）
+        next = current->next->next;
+        copy = current->next;
+        copy->rand = current->rand == NULL ? NULL : current->rand->next;
+        current = next;
+    }
+    current = head;
+    Node* res = head->next;
+    while (current!=NULL) {
+        next=current->next->next;
+        copy=current->next;
+        current->next=next;
+        copy->next=next==NULL?NULL:next->next;
+        current=next;
+    }
+    return res;
+}
+
 int main() {
     linkedList1 list1;
     initList1(&list1);
     creatFromTail1(list1);
-    printf("链表是否为回文结构判断结果：%s",
-           isPalindrome(list1) ? "true" : "false");
+    listPartition(list1, 5);
+    printList1(list1);
     freeList1(list1);
     return 0;
 }
