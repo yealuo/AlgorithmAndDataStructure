@@ -408,14 +408,146 @@ Node* copyListWithRand(Node* head) {
     }
     current = head;
     Node* res = head->next;
-    while (current!=NULL) {
-        next=current->next->next;
-        copy=current->next;
-        current->next=next;
-        copy->next=next==NULL?NULL:next->next;
-        current=next;
+    while (current != NULL) {
+        next = current->next->next;
+        copy = current->next;
+        current->next = next;
+        copy->next = next == NULL ? NULL : next->next;
+        current = next;
     }
     return res;
+}
+
+// 找到两个链表的相交点，空间复杂度为O(1)
+
+// 找到链表第一个入环节点，如果无环，返回NULL
+node1* getLoopNode(linkedList1 head) {
+    if (head == NULL || head->next == NULL || head->next->next == NULL) {
+        return NULL;
+    }
+    node1* slow = head->next;
+    node1* fast = head->next->next;
+    while (slow != fast) {
+        if (fast->next == NULL || fast->next->next == NULL) {
+            return NULL;
+        }
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    fast = head;
+    while (slow != fast) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return slow;
+}
+
+// 两链表均无环
+node1* noLoop(linkedList1 head1, linkedList1 head2) {
+    if (head1 == NULL || head1->next == NULL || head2 == NULL ||
+        head2->next == NULL) {
+        return NULL;
+    }
+    node1* current1 = head1->next;
+    node1* current2 = head2->next;
+    int length1 = 1;
+    int length2 = 1;
+    while (current1->next != NULL) {
+        length1++;
+        current1 = current1->next;
+    }
+    while (current2->next != NULL) {
+        length2++;
+        current2 = current2->next;
+    }
+    if (current1 != current2) {
+        return NULL;
+    }
+    int lengthDelta;
+    if (length1 >= length2) {
+        lengthDelta = length1 - length2;
+        current1 = head1;
+        current2 = head2;
+    } else {
+        lengthDelta = length2 - length1;
+        current1 = head2;
+        current2 = head1;
+    }
+    for (int i = 0; i < lengthDelta; i++) {
+        current1 = current1->next;
+    }
+    while (current1 != current2) {
+        current1 = current1->next;
+        current2 = current2->next;
+    }
+    return current1;
+}
+
+// 两链表均有环
+node1* bothLoop(linkedList1 head1,
+                node1* loop1,
+                linkedList1 head2,
+                node1* loop2) {
+    node1* current1;
+    node1* current2;
+    if (loop1 == loop2) {
+        current1 = head1->next;
+        current2 = head2->next;
+        int length1 = 1;
+        int length2 = 1;
+        while (current1 != loop1) {
+            length1++;
+            current1 = current1->next;
+        }
+        while (current2 != loop2) {
+            length2++;
+            current2 = current2->next;
+        }
+        int lengthDelta;
+        if (length1 >= length2) {
+            lengthDelta = length1 - length2;
+            current1 = head1;
+            current2 = head2;
+        } else {
+            lengthDelta = length2 - length1;
+            current1 = head2;
+            current2 = head1;
+        }
+        for (int i = 0; i < lengthDelta; i++) {
+            current1 = current1->next;
+        }
+        while (current1 != current2) {
+            current1 = current1->next;
+            current2 = current2->next;
+        }
+        return current1;
+    } else {
+        current1 = loop1->next;
+        while (current1 != loop1) {
+            if (current1 == loop2) {
+                return loop1;
+            }
+            current1 = current1->next;
+        }
+        return NULL;
+    }
+}
+
+// 主方法，找到两个链表的相交点
+node1* getCrossedNode(linkedList1 head1, linkedList1 head2) {
+    if (head1 == NULL || head1->next == NULL || head2 == NULL ||
+        head2->next == NULL) {
+        return NULL;
+    }
+    node1* loop1 = getLoopNode(head1);
+    node1* loop2 = getLoopNode(head2);
+    if (loop1 == NULL && loop2 == NULL) {
+        return noLoop(head1, head2);
+    } else if (loop1!=NULL&&loop2!=NULL) {
+        return bothLoop(head1,loop1,head2,loop2);
+    }else{
+        return NULL;
+    }
 }
 
 int main() {
