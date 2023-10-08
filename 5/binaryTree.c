@@ -210,14 +210,14 @@ void BFS(binaryTree head) {
     }
     queue* Queue = initqueue();
     enQueue(Queue, head);
-    while (Queue->front!=NULL) {
-        head=deQueue(Queue);
+    while (Queue->front != NULL) {
+        head = deQueue(Queue);
         visit(head);
-        if(head->lChild!=NULL){
-            enQueue(Queue,head->lChild);
+        if (head->lChild != NULL) {
+            enQueue(Queue, head->lChild);
         }
-        if(head->rChild!=NULL){
-            enQueue(Queue,head->rChild);
+        if (head->rChild != NULL) {
+            enQueue(Queue, head->rChild);
         }
     }
 }
@@ -226,7 +226,7 @@ void BFS(binaryTree head) {
 binaryTreeNode* createNode(int data) {
     binaryTreeNode* newNode = (binaryTreeNode*)malloc(sizeof(binaryTreeNode));
     if (newNode == NULL) {
-        printf("Memory allocation error\n");
+        perror("内存分配失败\n");
         exit(EXIT_FAILURE);
     }
     newNode->data = data;
@@ -250,7 +250,7 @@ int main() {
     // 创建一个简单的二叉树
     binaryTree myTree = createSampleTree();
 
-    //BFS遍历
+    // BFS遍历
     BFS(myTree);
 
     // 释放树的内存
