@@ -52,13 +52,13 @@ typedef struct linkedStackNode {
 } linkedStackNode, *linkedStack;
 
 // 链栈初始化
-linkedStack initLinkedStack(linkedStack* head) {
-    *head = (linkedStack)malloc(sizeof(linkedStackNode));
-    if (*head == NULL) {
+linkedStack initLinkedStack() {
+    linkedStack head = (linkedStack)malloc(sizeof(linkedStackNode));
+    if (head == NULL) {
         return NULL;
     }
-    (*head)->next = NULL;
-    return *head;
+    head->next = NULL;
+    return head;
 }
 
 // 入栈
@@ -85,7 +85,7 @@ binaryTreeNode* pop(linkedStack head) {
 // 先序遍历
 void preOrderUnRecursion(binaryTree root) {
     if (root != NULL) {
-        linkedStack stack = initLinkedStack(&stack);
+        linkedStack stack = initLinkedStack();
         push(stack, root);
         while (stack->next != NULL) {
             // 当栈不为空时
@@ -105,15 +105,15 @@ void preOrderUnRecursion(binaryTree root) {
 // 中序遍历
 void inOrderUnRecursion(binaryTree root) {
     if (root != NULL) {
-        linkedStack stack = initLinkedStack(&stack);
-        while (stack->next!=NULL||root!=NULL) {
-            if(root!=NULL){
-                push(stack,root);
-                root=root->lChild;
-            }else{
-                root=pop(stack);
-                printf("%d ",root->data);
-                root=root->rChild;
+        linkedStack stack = initLinkedStack();
+        while (stack->next != NULL || root != NULL) {
+            if (root != NULL) {
+                push(stack, root);
+                root = root->lChild;
+            } else {
+                root = pop(stack);
+                printf("%d ", root->data);
+                root = root->rChild;
             }
         }
         free(stack);
@@ -123,8 +123,8 @@ void inOrderUnRecursion(binaryTree root) {
 // 后序遍历
 void postOrderUnRecursion(binaryTree root) {
     if (root != NULL) {
-        linkedStack stack1 = initLinkedStack(&stack1);
-        linkedStack stack2 = initLinkedStack(&stack2);
+        linkedStack stack1 = initLinkedStack();
+        linkedStack stack2 = initLinkedStack();
         push(stack1, root);
         while (stack1->next != NULL) {
             // 当栈不为空时
@@ -142,6 +142,83 @@ void postOrderUnRecursion(binaryTree root) {
         }
         free(stack1);
         free(stack2);
+    }
+}
+
+// 广度优先遍历
+// 队列节点的定义
+typedef struct queueNode {
+    binaryTreeNode* node;
+    struct queueNode* next;
+} queueNode;
+
+// 队列的定义
+typedef struct queue {
+    queueNode* front;
+    queueNode* rear;
+} queue;
+
+// 队列初始化
+queue* initqueue() {
+    queue* head = (queue*)malloc(sizeof(queue));
+    if (head == NULL) {
+        perror("内存分配失败！");
+        exit(EXIT_FAILURE);
+    }
+    head->front = head->rear = NULL;
+    return head;
+}
+
+// 入队列
+void enQueue(queue* Queue, binaryTreeNode* node) {
+    queueNode* temp = (queueNode*)malloc(sizeof(queueNode));
+    if (temp == NULL) {
+        perror("内存分配失败");
+        exit(EXIT_FAILURE);
+    }
+    temp->node = node;
+    temp->next = NULL;
+    if (Queue->rear == NULL) {
+        Queue->front = Queue->rear = temp;
+    } else {
+        Queue->rear->next = temp;
+        Queue->rear = temp;
+    }
+}
+
+// 出队列
+binaryTreeNode* deQueue(queue* Queue) {
+    if (Queue->front == NULL) {
+        printf("队列空！");
+        return NULL;
+    }
+    binaryTreeNode* node = Queue->front->node;
+    queueNode* temp = Queue->front;
+    Queue->front = Queue->front->next;
+    temp->next = NULL;
+    free(temp);
+    if (Queue->front == NULL) {
+        Queue->rear = NULL;
+    }
+    return node;
+}
+
+// 广度优先遍历
+void BFS(binaryTree head) {
+    if (head == NULL) {
+        return;
+    }
+    queue* Queue = initqueue();
+    enQueue(Queue, head);
+    while (Queue->front!=NULL) {
+        head=deQueue(Queue);
+        visit(head);
+        if(head->lChild!=NULL){
+            enQueue(Queue,head->lChild);
+        }
+        if(head->rChild!=NULL){
+            enQueue(Queue,head->rChild);
+        }
     }
 }
 
@@ -173,35 +250,8 @@ int main() {
     // 创建一个简单的二叉树
     binaryTree myTree = createSampleTree();
 
-    // 使用递归先序遍历
-    printf("递归法先序遍历：");
-    preOrder(myTree);
-    printf("\n");
-
-    // 使用非递归先序遍历
-    printf("非递归法先序遍历：");
-    preOrderUnRecursion(myTree);
-    printf("\n");
-
-    // 使用递归中序遍历
-    printf("递归法中序遍历：");
-    inOrder(myTree);
-    printf("\n");
-
-    // 使用非递归中序遍历
-    printf("非递归法中序遍历：");
-    inOrderUnRecursion(myTree);
-    printf("\n");
-
-    // 使用递归后序遍历
-    printf("递归法后序遍历：");
-    postOrder(myTree);
-    printf("\n");
-
-    // 使用非递归后序遍历
-    printf("非递归法后序遍历：");
-    postOrderUnRecursion(myTree);
-    printf("\n");
+    //BFS遍历
+    BFS(myTree);
 
     // 释放树的内存
     free(myTree);

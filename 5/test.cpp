@@ -1,15 +1,11 @@
 #include <iostream>
-#include <string>
-#include <vector>
+
 
 using namespace std;
 
 int main() {
-    vector<string> msg{"Hello", "C++",     "World",
-                       "from",  "VS Code", "and the C++ extension!"};
-
-    for (const string& word : msg) {
-        cout << word << " ";
-    }
-    cout << endl;
+    perror("测试");
+    perror("内存分配失败！");
+    exit(EXIT_FAILURE);
+    return 0;
 }
