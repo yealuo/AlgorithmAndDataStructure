@@ -1,3 +1,5 @@
+#include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -159,7 +161,7 @@ typedef struct queue {
 } queue;
 
 // 队列初始化
-queue* initqueue() {
+queue* initQueue() {
     queue* head = (queue*)malloc(sizeof(queue));
     if (head == NULL) {
         perror("内存分配失败！");
@@ -203,12 +205,23 @@ binaryTreeNode* deQueue(queue* Queue) {
     return node;
 }
 
+// 计算队列长度
+int size(queue* Queue) {
+    int result = 0;
+    queueNode* node = Queue->front;
+    while (node != NULL) {
+        result++;
+        node = node->next;
+    }
+    return result;
+}
+
 // 广度优先遍历
 void BFS(binaryTree head) {
     if (head == NULL) {
         return;
     }
-    queue* Queue = initqueue();
+    queue* Queue = initQueue();
     enQueue(Queue, head);
     while (Queue->front != NULL) {
         head = deQueue(Queue);
@@ -220,6 +233,97 @@ void BFS(binaryTree head) {
             enQueue(Queue, head->rChild);
         }
     }
+}
+
+// 统计二叉树最大宽度
+int maxWidth(binaryTree root) {
+    if (root == NULL) {
+        return 0;
+    }
+    queue* Queue = initQueue();
+    enQueue(Queue, root);
+    int maxWidth = 0;
+    while (Queue->front != NULL) {
+        int levelSize = size(Queue);
+        maxWidth = levelSize > maxWidth ? levelSize : maxWidth;
+        for (int i = 0; i < levelSize; i++) {
+            binaryTreeNode* node = deQueue(Queue);
+            if (node->lChild != NULL) {
+                enQueue(Queue, node->lChild);
+            }
+            if (node->rChild != NULL) {
+                enQueue(Queue, node->rChild);
+            }
+        }
+    }
+    return maxWidth;
+}
+
+// 判断一个树是否是搜索二叉树
+bool isBSTUtil(binaryTree root, long long min, long long max) {
+    if (root == NULL) {
+        return true;
+    }
+    if (root->data <= min || root->data >= max) {
+        return false;
+    }
+    return isBSTUtil(root->lChild, min, root->data) &&
+           isBSTUtil(root->rChild, root->data, max);
+}
+
+bool isBST(binaryTree root) {
+    return isBSTUtil(root, LLONG_MIN, LLONG_MAX);
+}
+
+// 方法二
+static long int preValue = LLONG_MIN;
+bool isBST2(binaryTree root) {
+    if (root == NULL) {
+        return true;
+    }
+    if (!isBST2(root->lChild)) {
+        return false;
+    }
+    if (root->data <= preValue) {
+        return false;
+    } else {
+        preValue = root->data;
+    }
+    return isBST2(root->rChild);
+}
+
+// 判断一个给定树是否是完全二叉树
+bool isCBT(binaryTree root) {
+    if (root == NULL) {
+        return true;
+    }
+    queue* Queue = initQueue();
+    bool leaf = false;
+    queueNode* left = NULL;
+    queueNode* right = NULL;
+    enQueue(Queue, root);
+    while (Queue->front!=NULL) {
+        root=deQueue(Queue);
+        left=root->lChild;
+        right=root->rChild;
+        if(
+            (left==NULL&&right!=NULL)
+            ||
+            (leaf&&(left!=NULL||right!=NULL))
+        ){
+            return false;
+        }
+        if(left!=NULL){
+            enQueue(Queue,left);
+        }
+        if(right!=NULL){
+            enQueue(Queue,right);
+        }
+        if(left==NULL||right==NULL){
+            leaf=true;
+        }
+    }
+    return true;
 }
 
 // 实验用二叉树
@@ -236,13 +340,8 @@ binaryTreeNode* createNode(int data) {
 }
 
 binaryTree createSampleTree() {
-    binaryTree root = createNode(1);
-    root->lChild = createNode(2);
-    root->rChild = createNode(3);
-    root->lChild->lChild = createNode(4);
-    root->lChild->rChild = createNode(5);
-    root->rChild->lChild = createNode(6);
-    root->rChild->rChild = createNode(7);
+    binaryTree root = createNode(0);
+
     return root;
 }
 
@@ -251,7 +350,7 @@ int main() {
     binaryTree myTree = createSampleTree();
 
     // BFS遍历
-    BFS(myTree);
+    printf("%d", isBST2(myTree));
 
     // 释放树的内存
     free(myTree);
