@@ -302,28 +302,65 @@ bool isCBT(binaryTree root) {
     queueNode* left = NULL;
     queueNode* right = NULL;
     enQueue(Queue, root);
-    while (Queue->front!=NULL) {
-        root=deQueue(Queue);
-        left=root->lChild;
-        right=root->rChild;
-        if(
-            (left==NULL&&right!=NULL)
-            ||
-            (leaf&&(left!=NULL||right!=NULL))
-        ){
+    while (Queue->front != NULL) {
+        root = deQueue(Queue);
+        left = root->lChild;
+        right = root->rChild;
+        if ((left == NULL && right != NULL) ||
+            (leaf && (left != NULL || right != NULL))) {
             return false;
         }
-        if(left!=NULL){
-            enQueue(Queue,left);
+        if (left != NULL) {
+            enQueue(Queue, left);
         }
-        if(right!=NULL){
-            enQueue(Queue,right);
+        if (right != NULL) {
+            enQueue(Queue, right);
         }
-        if(left==NULL||right==NULL){
-            leaf=true;
+        if (left == NULL || right == NULL) {
+            leaf = true;
         }
     }
     return true;
+}
+
+// 判断给定树是否是平衡二叉树
+// 定义返回值
+typedef struct returnType {
+    bool isBalanced;
+    int height;
+} returnType;
+
+// 初始化函数
+returnType* initReturnType(bool isBalanced, int height) {
+    returnType* result = (returnType*)malloc(sizeof(returnType));
+    if (result == NULL) {
+        perror("内存分配错误！");
+        exit(EXIT_FAILURE);
+    }
+    result->isBalanced = isBalanced;
+    result->height = height;
+    return result;
+}
+
+// 递归函数
+returnType* process(binaryTree root) {
+    if (root == NULL) {
+        return initReturnType(true, 0);
+    }
+    returnType* leftData = process(root->lChild);
+    returnType* rightData = process(root->rChild);
+    int height = leftData->height > rightData->height ? leftData->height + 1
+                                                      : rightData->height + 1;
+    bool isBalanced = leftData->isBalanced && rightData->isBalanced &&
+                      abs(leftData->height - rightData->height) < 2;
+    free(leftData);
+    free(rightData);
+    return initReturnType(isBalanced, height);
+}
+
+// 调用函数
+bool isBalanced(binaryTree root) {
+    return process(root)->isBalanced;
 }
 
 // 实验用二叉树
