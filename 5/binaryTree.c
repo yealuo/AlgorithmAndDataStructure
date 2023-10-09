@@ -363,6 +363,101 @@ bool isBalanced(binaryTree root) {
     return process(root)->isBalanced;
 }
 
+// 判断给定树是否是满二叉树
+// 定义返回值
+typedef struct returnType1 {
+    int height;
+    int nodeNum;
+} returnType1;
+
+// 初始化函数
+returnType1* initReturnType1(int height, int nodeNum) {
+    returnType1* result = (returnType1*)malloc(sizeof(returnType1));
+    if (result == NULL) {
+        perror("内存分配错误！");
+        exit(EXIT_FAILURE);
+    }
+    result->height = height;
+    result->nodeNum = nodeNum;
+    return result;
+}
+
+// 递归函数
+returnType1* process1(binaryTree root) {
+    if (root == NULL) {
+        return initReturnType1(0, 0);
+    }
+    returnType1* leftData = process1(root->lChild);
+    returnType1* rightData = process1(root->rChild);
+    int height = leftData->height > rightData->height ? leftData->height + 1
+                                                      : rightData->height + 1;
+    int nodeNum = leftData->nodeNum + rightData->nodeNum + 1;
+    free(leftData);
+    free(rightData);
+    return initReturnType1(height, nodeNum);
+}
+
+// 调用函数
+bool isFBS(binaryTree root) {
+    if (root == NULL) {
+        return true;
+    }
+    returnType1* temp = process1(root);
+    return temp->nodeNum == (1 << temp->height - 1);
+}
+
+// 返回树上两节点的最低公共祖先
+binaryTreeNode* lowestCommonAncestor(binaryTree root,
+                                     binaryTreeNode* node1,
+                                     binaryTreeNode* node2) {
+    if (root == NULL || root == node1 || root == node2) {
+        return root;
+    }
+    binaryTreeNode* left = lowestCommonAncestor(root->lChild, node1, node2);
+    binaryTreeNode* right = lowestCommonAncestor(root->rChild, node1, node2);
+    if (left != NULL && right != NULL) {
+        return root;
+    }
+    return left != NULL ? left : right;
+}
+
+// 返回给定节点的后继节点
+//树的定义
+typedef struct binaryTreeNode1{
+    int data;
+    struct binaryTreeNode1* lChild;
+    struct binaryTreeNode1* rChild;
+    struct binaryTreeNode1* parent;
+} binaryTreeNode1,*binaryTree1;
+
+// 返回给定树的最左侧节点
+binaryTreeNode1* getMostLeftNode(binaryTree1 root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    while (root->lChild!=NULL) {
+        root=root->lChild;
+    }
+    return root;
+}
+
+// 返回后继节点
+binaryTreeNode1* getSuccessorNode(binaryTree1 root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    if(root->rChild!=NULL){
+        return getMostLeftNode(root->rChild);
+    }else{
+        binaryTreeNode1* parent=root->parent;
+        while(parent!=NULL&&parent->lChild!=root){
+            root=parent;
+            parent=root->parent;
+        }
+        return parent;
+    }
+}
+
 // 实验用二叉树
 binaryTreeNode* createNode(int data) {
     binaryTreeNode* newNode = (binaryTreeNode*)malloc(sizeof(binaryTreeNode));
