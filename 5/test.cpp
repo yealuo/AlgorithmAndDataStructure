@@ -4,8 +4,7 @@
 using namespace std;
 
 int main() {
-    perror("测试");
-    perror("内存分配失败！");
-    exit(EXIT_FAILURE);
+    int i=8;
+    printf("%c",i+'0');
     return 0;
 }

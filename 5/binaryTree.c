@@ -299,8 +299,8 @@ bool isCBT(binaryTree root) {
     }
     queue* Queue = initQueue();
     bool leaf = false;
-    queueNode* left = NULL;
-    queueNode* right = NULL;
+    binaryTreeNode* left = NULL;
+    binaryTreeNode* right = NULL;
     enQueue(Queue, root);
     while (Queue->front != NULL) {
         root = deQueue(Queue);
@@ -458,6 +458,36 @@ binaryTreeNode1* getSuccessorNode(binaryTree1 root) {
     }
 }
 
+// 二叉树的序列化与反序列化
+// 先序遍历序列化
+void serialByPre(binaryTree root){
+    if(root==NULL){
+        printf("#_");
+        return;
+    }
+    printf("%d_",root->data);
+    serialByPre(root->lChild);
+    serialByPre(root->rChild);
+}
+
+//一个纸条面向自己向外对折N次，从上向下打印痕迹方向
+//递归函数
+ void printProcess(int i,int N,bool down){
+    if(i>N){
+        return;
+    }
+    printProcess(i+1,N,true);
+    printf("%s",down?"凹":"凸");
+    printProcess(i+1,N,false);
+ }
+
+//调用函数
+void printAllFolds(int N){
+    printProcess(1,N,true);
+}
+
+
+
 // 实验用二叉树
 binaryTreeNode* createNode(int data) {
     binaryTreeNode* newNode = (binaryTreeNode*)malloc(sizeof(binaryTreeNode));
@@ -472,17 +502,19 @@ binaryTreeNode* createNode(int data) {
 }
 
 binaryTree createSampleTree() {
-    binaryTree root = createNode(0);
-
+    binaryTree root = createNode(1);
+    root->lChild = createNode(2);
+    root->rChild = createNode(3);
+    root->lChild->lChild = createNode(4);
+    root->lChild->rChild = createNode(5);
+    root->rChild->lChild = createNode(6);
+    root->rChild->rChild = createNode(7);
     return root;
-}
-
-int main() {
+    return;
     // 创建一个简单的二叉树
     binaryTree myTree = createSampleTree();
 
-    // BFS遍历
-    printf("%d", isBST2(myTree));
+    serialByPre(myTree);
 
     // 释放树的内存
     free(myTree);
