@@ -290,8 +290,90 @@ bool isBBT_2(const BinaryTree* root) {
     return height(root) >= 0;
 }
 
+// 返回树上两节点的最低公共祖先节点
+BinaryTree* LCA(BinaryTree* root,
+                const BinaryTree* node1,
+                const BinaryTree* node2) {
+    if (root == nullptr || root == node1 || root == node2) {
+        return root;
+    }
 
+    BinaryTree* leftResult = LCA(root->lChild, node1, node2);
+    BinaryTree* rightResult = LCA(root->rChild, node1, node2);
 
+    if (leftResult != nullptr && rightResult != nullptr) {
+        return root;
+    } else if (leftResult != nullptr) {
+        return leftResult;
+    } else {
+        return rightResult;
+    }
+}
+
+// 返回给定节点的后继节点（中序遍历二叉树中一个节点的下一个节点）
+// 已知树的根节点
+BinaryTree* successor(BinaryTree* root, const BinaryTree* node) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+
+    stack<BinaryTree*> stackOfNode;
+    bool flag = false;  // 是否遇到给定节点
+
+    while (root != nullptr || !stackOfNode.empty()) {
+        if (root != nullptr) {
+            stackOfNode.push(root);
+            root = root->lChild;
+        } else {
+            root = stackOfNode.top();
+            stackOfNode.pop();
+
+            if (flag) {
+                return root;
+            }
+
+            if (root == node) {
+                flag = true;
+            }
+
+            root = root->rChild;
+        }
+    }
+    return nullptr;
+}
+
+// 不知树的根节点
+class TreeNode {
+   public:
+    int value;
+    TreeNode* lChild;
+    TreeNode* rChild;
+    TreeNode* parent;
+    TreeNode(int x)
+        : value(x), lChild(nullptr), rChild(nullptr), parent(nullptr) {}
+};
+
+TreeNode* findSuccessor(TreeNode* node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    if (node->rChild != nullptr) {
+        node = node->rChild;
+
+        while (node->lChild != nullptr) {
+            node = node->lChild;
+        }
+
+        return node;
+    }
+
+    while (node->parent != nullptr && node->parent->lChild != node) {
+        node = node->parent;
+    }
+
+    return node->parent;
+}
 
 int main() {
     return 0;
